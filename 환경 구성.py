@@ -90,7 +90,11 @@ class FrozenLakeEnv(discrete.DiscreteEnv):
     The episode ends when you reach the goal or fall in a hole.
     You receive a reward of 1 if you reach the goal, and zero otherwise.
     """
-
+    """
+    불연속적(정수) 이기 떄문에 Discrete 공간을 활용
+    이 환경이 어떠한 렌더링 모드를 지원하는가 
+    """
+    
     metadata = {'render.modes': ['human', 'ansi']}
 
     def __init__(self, desc=None, map_name="4x4", is_slippery=True):
@@ -101,13 +105,13 @@ class FrozenLakeEnv(discrete.DiscreteEnv):
         self.desc = desc = np.asarray(desc, dtype='c')
         self.nrow, self.ncol = nrow, ncol = desc.shape
         self.reward_range = (0, 1)
-
+#액션의 갯수는 4개, 스테이트의 갯수는 행과 열의 갯수의 곱
         nA = 4
         nS = nrow * ncol
 
         isd = np.array(desc == b'S').astype('float64').ravel()
         isd /= isd.sum()
-
+#행동에 대한 확률의 범위설정
         P = {s: {a: [] for a in range(nA)} for s in range(nS)}
 
         def to_s(row, col):
